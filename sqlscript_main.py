@@ -1,0 +1,127 @@
+# -*- coding: utf-8 -*-
+
+# Form implementation generated from reading ui file 'C:\Users\Dixon\Projects\pysqlite_browser\sqlscript.ui'
+#
+# Created: Sat Feb 23 14:53:46 2013
+#      by: PyQt4 UI code generator 4.8.3
+#
+# WARNING! All changes made in this file will be lost!
+
+from PyQt4 import QtCore, QtGui
+
+try:
+    _fromUtf8 = QtCore.QString.fromUtf8
+except AttributeError:
+    _fromUtf8 = lambda s: s
+
+class Ui_Dialog(object):
+    def setupUi(self, Dialog):
+        Dialog.setObjectName(_fromUtf8("Dialog"))
+        Dialog.resize(380, 240)
+        Dialog.setMinimumSize(QtCore.QSize(380, 240))
+        Dialog.setMaximumSize(QtCore.QSize(380, 240))
+        self.verticalLayout = QtGui.QVBoxLayout(Dialog)
+        self.verticalLayout.setObjectName(_fromUtf8("verticalLayout"))
+        self.widget_2 = QtGui.QWidget(Dialog)
+        self.widget_2.setObjectName(_fromUtf8("widget_2"))
+        self.formLayout = QtGui.QFormLayout(self.widget_2)
+        self.formLayout.setFieldGrowthPolicy(QtGui.QFormLayout.AllNonFixedFieldsGrow)
+        self.formLayout.setMargin(0)
+        self.formLayout.setMargin(0)
+        self.formLayout.setObjectName(_fromUtf8("formLayout"))
+        self.label = QtGui.QLabel(self.widget_2)
+        self.label.setPixmap(QtGui.QPixmap(_fromUtf8(":/icons/script_code_red.png")))
+        self.label.setObjectName(_fromUtf8("label"))
+        self.formLayout.setWidget(0, QtGui.QFormLayout.LabelRole, self.label)
+        self.label_2 = QtGui.QLabel(self.widget_2)
+        self.label_2.setWordWrap(True)
+        self.label_2.setObjectName(_fromUtf8("label_2"))
+        self.formLayout.setWidget(0, QtGui.QFormLayout.FieldRole, self.label_2)
+        self.widget_5 = QtGui.QWidget(self.widget_2)
+        self.widget_5.setObjectName(_fromUtf8("widget_5"))
+        self.horizontalLayout_3 = QtGui.QHBoxLayout(self.widget_5)
+        self.horizontalLayout_3.setMargin(0)
+        self.horizontalLayout_3.setMargin(0)
+        self.horizontalLayout_3.setObjectName(_fromUtf8("horizontalLayout_3"))
+        self.label_4 = QtGui.QLabel(self.widget_5)
+        self.label_4.setObjectName(_fromUtf8("label_4"))
+        self.horizontalLayout_3.addWidget(self.label_4)
+        self.lDatabase = QtGui.QLabel(self.widget_5)
+        font = QtGui.QFont()
+        font.setPointSize(10)
+        font.setWeight(75)
+        font.setBold(True)
+        self.lDatabase.setFont(font)
+        self.lDatabase.setObjectName(_fromUtf8("lDatabase"))
+        self.horizontalLayout_3.addWidget(self.lDatabase)
+        self.horizontalLayout_3.setStretch(1, 1)
+        self.formLayout.setWidget(1, QtGui.QFormLayout.FieldRole, self.widget_5)
+        self.verticalLayout.addWidget(self.widget_2)
+        self.label_3 = QtGui.QLabel(Dialog)
+        self.label_3.setObjectName(_fromUtf8("label_3"))
+        self.verticalLayout.addWidget(self.label_3)
+        self.widget_3 = QtGui.QWidget(Dialog)
+        self.widget_3.setObjectName(_fromUtf8("widget_3"))
+        self.horizontalLayout = QtGui.QHBoxLayout(self.widget_3)
+        self.horizontalLayout.setMargin(0)
+        self.horizontalLayout.setMargin(0)
+        self.horizontalLayout.setObjectName(_fromUtf8("horizontalLayout"))
+        self.lFile = QtGui.QLineEdit(self.widget_3)
+        self.lFile.setObjectName(_fromUtf8("lFile"))
+        self.horizontalLayout.addWidget(self.lFile)
+        self.bBrowse = QtGui.QPushButton(self.widget_3)
+        icon = QtGui.QIcon()
+        icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/icons/folder.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.bBrowse.setIcon(icon)
+        self.bBrowse.setObjectName(_fromUtf8("bBrowse"))
+        self.horizontalLayout.addWidget(self.bBrowse)
+        self.verticalLayout.addWidget(self.widget_3)
+        self.widget_4 = QtGui.QWidget(Dialog)
+        self.widget_4.setObjectName(_fromUtf8("widget_4"))
+        self.verticalLayout_2 = QtGui.QVBoxLayout(self.widget_4)
+        self.verticalLayout_2.setMargin(0)
+        self.verticalLayout_2.setMargin(0)
+        self.verticalLayout_2.setObjectName(_fromUtf8("verticalLayout_2"))
+        self.progressBar = QtGui.QProgressBar(self.widget_4)
+        self.progressBar.setProperty(_fromUtf8("value"), 0)
+        self.progressBar.setObjectName(_fromUtf8("progressBar"))
+        self.verticalLayout_2.addWidget(self.progressBar)
+        self.verticalLayout.addWidget(self.widget_4)
+        self.line = QtGui.QFrame(Dialog)
+        self.line.setFrameShape(QtGui.QFrame.HLine)
+        self.line.setFrameShadow(QtGui.QFrame.Sunken)
+        self.line.setObjectName(_fromUtf8("line"))
+        self.verticalLayout.addWidget(self.line)
+        self.widget = QtGui.QWidget(Dialog)
+        self.widget.setObjectName(_fromUtf8("widget"))
+        self.horizontalLayout_2 = QtGui.QHBoxLayout(self.widget)
+        self.horizontalLayout_2.setMargin(0)
+        self.horizontalLayout_2.setMargin(0)
+        self.horizontalLayout_2.setObjectName(_fromUtf8("horizontalLayout_2"))
+        self.ckAbortOnError = QtGui.QCheckBox(self.widget)
+        self.ckAbortOnError.setChecked(True)
+        self.ckAbortOnError.setObjectName(_fromUtf8("ckAbortOnError"))
+        self.horizontalLayout_2.addWidget(self.ckAbortOnError)
+        self.buttonBox = QtGui.QDialogButtonBox(self.widget)
+        self.buttonBox.setOrientation(QtCore.Qt.Horizontal)
+        self.buttonBox.setStandardButtons(QtGui.QDialogButtonBox.Cancel|QtGui.QDialogButtonBox.Ok)
+        self.buttonBox.setObjectName(_fromUtf8("buttonBox"))
+        self.horizontalLayout_2.addWidget(self.buttonBox)
+        self.verticalLayout.addWidget(self.widget)
+        self.verticalLayout.setStretch(3, 1)
+
+        self.retranslateUi(Dialog)
+        QtCore.QObject.connect(self.buttonBox, QtCore.SIGNAL(_fromUtf8("accepted()")), Dialog.accept)
+        QtCore.QObject.connect(self.buttonBox, QtCore.SIGNAL(_fromUtf8("rejected()")), Dialog.reject)
+        QtCore.QMetaObject.connectSlotsByName(Dialog)
+
+    def retranslateUi(self, Dialog):
+        Dialog.setWindowTitle(QtGui.QApplication.translate("Dialog", "Dialog", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_2.setText(QtGui.QApplication.translate("Dialog", "Execute query(s) stored in a SQL batch file.\n"
+"This option is useful when you want to execute batch scripts without loading it into the SQL editor", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_4.setText(QtGui.QApplication.translate("Dialog", "Current database:", None, QtGui.QApplication.UnicodeUTF8))
+        self.lDatabase.setText(QtGui.QApplication.translate("Dialog", "None", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_3.setText(QtGui.QApplication.translate("Dialog", "File to execute", None, QtGui.QApplication.UnicodeUTF8))
+        self.ckAbortOnError.setText(QtGui.QApplication.translate("Dialog", "Abort on error", None, QtGui.QApplication.UnicodeUTF8))
+
+import res_rc

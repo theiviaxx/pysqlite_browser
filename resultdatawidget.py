@@ -1,6 +1,9 @@
 
 
-from PyQt4 import QtGui, QtCore, QtSql
+try:
+    from PyQt4 import QtGui, QtCore, QtSql
+except ImportError:
+    from PySide import QtGui, QtCore, QtSql
 from resultdata_main import Ui_Form
 from tabledatawidget import TableDataWidget
 

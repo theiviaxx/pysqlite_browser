@@ -1,19 +1,25 @@
 from collections import OrderedDict
 import sqlite3
 
-from PyQt4 import QtGui, QtCore, QtSql
+try:
+    from PyQt4 import QtGui, QtCore, QtSql
+except ImportError:
+    from PySide import QtGui, QtCore, QtSql
 
 from constants import FIELD_TYPES
 from sqlitedatabase import SQLiteDatabase, SQLiteQuery
 
 def transaction(db, table, query):
     db.transaction()
-    q = db.exec_(query)
+    q = SQLiteQuery(db)
+    q.exec_(query)
     err = q.lastError()
     if err.isValid():
-        self._db.rollback()
+        db.rollback()
         
         return False, err.databaseText()
+    
+    db.appendQuery(q)
     
     return True, None
 
@@ -88,8 +94,15 @@ def dropTable(db, table):
     query = "DROP TABLE IF EXISTS {table}".format(
         table=table
     )
-    if transaction(db, table, query)[0]:
-        db.commit()
+    res, msg = transaction(db, table, query)
+    if not res:
+        db.rollback()
+        
+        return res, msg
+    
+    db.commit()
+    
+    return True, None    
 
 def emptyDatabase(db):
     """Drops all tables from database"""
@@ -108,6 +121,22 @@ def emptyDatabase(db):
     
     return True, None
 
+def renameTable(db, table , name):
+    """Renames the given table to name"""
+    query = "ALTER TABLE {table} RENAME TO {name}".format(
+        table=table,
+        name=name
+    )
+    res, msg = transaction(db, table, query)
+    if not res:
+        db.rollback()
+        
+        return res, msg
+    
+    db.commit()
+    
+    return True, None
+
 def insertRow(db, table):
     """Inserts a new row into the table"""
     fields = getFieldTypes(db, table)
@@ -118,6 +147,29 @@ def insertRow(db, table):
     q = SQLiteQuery(db)
     q.exec_(query)
     db.appendQuery(q)
+
+def tableCreateScript(db, table):
+    data = []
+    q = db.exec_("PRAGMA table_info(%s)" % table)
+    hasmore = q.next()
+    create = "CREATE TABLE `%s` (" % table
+    while hasmore:
+        create += '\n    `%s` %s' % (
+            q.value(1),
+            q.value(2),
+        )
+        if not q.value(3):
+            create += ' NOT NULL'
+        
+        if not isinstance(q.value(4), QtCore.QPyNullVariant):
+            create += ' %s' % q.value(4)
+        create += ','
+        hasmore = q.next()
+    
+    create = create[:-1]
+    create += '\n)'
+    
+    return create
     
 
 def deleteRows(db, table, rows):

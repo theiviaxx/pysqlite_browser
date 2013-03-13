@@ -1,11 +1,16 @@
 import os
 import json
 
-from PyQt4 import QtGui, QtCore, QtSql
+try:
+    from PyQt4 import QtGui, QtCore, QtSql
+except ImportError:
+    from PySide import QtGui, QtCore, QtSql
 from tabledata_main import Ui_Form
-from querymodel import QueryModel, QuerySortModel, USER_ROLE
+from querymodel import QueryModel, QuerySortModel
 from blobdialog import BlobDialog
+from exportdatadialog import ExportDataDialog
 from sqlitedatabase import SQLiteQuery
+import serializer
 import commands
 
 QUERY = "SELECT * FROM {table}{limit}"
@@ -18,20 +23,22 @@ QTableView { gridline-color: #b4b4b4; }
 
 class TableDelegate(QtGui.QItemDelegate):
     def createEditor(self, parent, option, index):
-        if isinstance(index.data(USER_ROLE), (str, unicode)):
+        if isinstance(index.data(QtCore.Qt.EditRole), (str, unicode)):
             widget = BlobDialog(parent)
             return widget
         
         return super(TableDelegate, self).createEditor(parent, option, index)
     
     def setEditorData(self, editor, index):
-        if isinstance(index.data(USER_ROLE), (str, unicode)):
-            editor.setContent(index.data())
+        if isinstance(index.data(QtCore.Qt.EditRole), (str, unicode)):
+            editor.setContent(index.data(QtCore.Qt.EditRole))
+            #editor.adjustSize()
+            editor.move(editor.parentWidget().rect().center() - editor.rect().center())
         else:
             super(TableDelegate, self).setEditorData(editor, index)
     
     def setModelData(self, editor, model, index):
-        if isinstance(index.data(USER_ROLE), (str, unicode)):
+        if isinstance(index.data(QtCore.Qt.EditRole), (str, unicode)):
             value = editor.content()
             model.setData(index, value)
         else:
@@ -63,30 +70,46 @@ class TableDataWidget(QtGui.QWidget):
         self._ui.tTable.setVisible(False)
         self._ui.twGrid.setItemDelegate(TableDelegate(self._ui.twGrid))
         
+        ## -- Copy Data menu
+        self._copymenu = QtGui.QMenu(self)
+        self._copymenu.addAction(self._ui.actionCopy_Cell)
+        self._copymenu.addAction(self._ui.actionCopy_Table)
+        self._copymenu.addAction(self._ui.actionCopy_Selected)
+        
         self.bindEvents()
     
     def bindEvents(self):
         self._ui.iLimit.valueChanged.connect(self.updateQuery)
         self._ui.twGrid.clicked.connect(self.clickHandler)
-        #self._ui.twGrid.doubleClicked.connect(self.doubleClickHandler)
         self._model.dataChanged.connect(self.dataChangeHandler)
         self._model.dataCommitted.connect(self.commitHandler)
         
-        #self._ui.bExportData.setDefaultAction(self._ui.actionExportData)
+        self._ui.bCopyData.setMenu(self._copymenu)
+        
+        self._ui.bExportData.setDefaultAction(self._ui.actionExportData)
         #self._ui.bCopyData.setDefaultAction(self._ui.actionCopy_Data)
         #self._ui.bInsertRow.setDefaultAction(self._ui.actionInsert_Row)
         #self._ui.bCopyRow.setDefaultAction(self._ui.actionDuplicateRow)
         self._ui.bSaveChanges.setDefaultAction(self._ui.actionSave_changes)
         self._ui.bRemoveSelectedRows.setDefaultAction(self._ui.actionDelete_Row)
         self._ui.bDiscardChanges.setDefaultAction(self._ui.actionDiscard_changes)
+        self._ui.bGridView.setDefaultAction(self._ui.actionGrid_View)
+        self._ui.bTableView.setDefaultAction(self._ui.actionTable_View)
         self._ui.bRefresh.setDefaultAction(self._ui.actionRefresh)
         
+        self._ui.actionExportData.triggered.connect(self.exportDataHandler)
+        #self._ui.actionCopy_Data.setMenu(self._copymenu)
         #self._ui.actionInsert_Row.triggered.connect(self.insertRowHandler)
         #self._ui.actionDuplicateRow.triggered.connect(self.duplicateRows)
         self._ui.actionSave_changes.triggered.connect(self._model.commitQueue)
         self._ui.actionDiscard_changes.triggered.connect(self._model.flushQueue)
         self._ui.actionDelete_Row.triggered.connect(self.deleteSelectedRows)
+        self._ui.actionGrid_View.triggered.connect(self.gridView)
+        self._ui.actionTable_View.triggered.connect(self.tableView)
         self._ui.actionRefresh.triggered.connect(self.updateQuery)
+        self._ui.actionCopy_Cell.triggered.connect(self.copyCellHandler)
+        self._ui.actionCopy_Table.triggered.connect(self.copyTableHandler)
+        self._ui.actionCopy_Selected.triggered.connect(self.copySelectedHandler)
     
     def setDatabase(self, db):
         self._db = db
@@ -190,3 +213,46 @@ class TableDataWidget(QtGui.QWidget):
         
         self._query.execute(queries)
     
+    def exportDataHandler(self):
+        dialog = ExportDataDialog(self._db, self._table, self)
+        dialog.exec_()
+    
+    def gridView(self):
+        self._ui.twGrid.setVisible(True)
+        self._ui.tTable.setVisible(False)
+    
+    def tableView(self):
+        self._ui.twGrid.setVisible(False)
+        self._ui.tTable.setVisible(True)
+        writer = serializer.TextSerializer(self._db, self._table)
+        self._ui.tTable.setPlainText(writer.dumps(options={'columns': True}))
+    
+    def copyTableHandler(self):
+        writer = serializer.CSVSerializer(self._db, self._table)
+        text = writer.dumps()
+        
+        clipboard = QtGui.QApplication.clipboard()
+        clipboard.setText(text)
+    
+    def copyCellHandler(self):
+        writer = serializer.TextSerializer(self._db, self._table)
+        index = self._ui.twGrid.currentIndex()
+        text = writer.dumps(fields=[self._model.headerData(index.column(), QtCore.Qt.Horizontal),]).split('\n')
+        
+        clipboard = QtGui.QApplication.clipboard()
+        clipboard.setText(text[index.row()].strip())
+    
+    def copySelectedHandler(self):
+        writer = serializer.CSVSerializer(self._db, self._table)
+        sel = self._ui.twGrid.selectionModel()
+        record = self._db.record(self._table)
+        fields = [record.field(i).name() for i in xrange(record.count())]
+        n = len(fields)
+        l = sel.selectedIndexes()
+        rows = zip(*[l[i::n] for i in range(0, n)])
+        indexes = [r[0].row() for r in rows]
+        text = writer.dumps().split('\n')
+        tocopy = [text[i] for i in indexes]
+        
+        clipboard = QtGui.QApplication.clipboard()
+        clipboard.setText('\n'.join(tocopy))

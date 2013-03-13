@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'C:\Users\Dixon\Projects\sqlpy\query.ui'
+# Form implementation generated from reading ui file 'C:\Users\Dixon\Projects\pysqlite_browser\query.ui'
 #
-# Created: Mon Feb 18 22:32:03 2013
+# Created: Sat Feb 23 22:11:13 2013
 #      by: PyQt4 UI code generator 4.8.3
 #
 # WARNING! All changes made in this file will be lost!
@@ -70,28 +70,16 @@ class Ui_Form(object):
         icon1 = QtGui.QIcon()
         icon1.addPixmap(QtGui.QPixmap(_fromUtf8(":/icons/table.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.twTabs.addTab(self.tab_9, icon1, _fromUtf8(""))
-        self.tab_10 = QtGui.QWidget()
-        self.tab_10.setObjectName(_fromUtf8("tab_10"))
-        self.verticalLayout_3 = QtGui.QVBoxLayout(self.tab_10)
-        self.verticalLayout_3.setMargin(0)
-        self.verticalLayout_3.setObjectName(_fromUtf8("verticalLayout_3"))
-        self.tInfo = QtGui.QTextEdit(self.tab_10)
-        self.tInfo.setObjectName(_fromUtf8("tInfo"))
-        self.verticalLayout_3.addWidget(self.tInfo)
-        icon2 = QtGui.QIcon()
-        icon2.addPixmap(QtGui.QPixmap(_fromUtf8(":/icons/bricks.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        self.twTabs.addTab(self.tab_10, icon2, _fromUtf8(""))
         self.verticalLayout.addWidget(self.splitter)
 
         self.retranslateUi(Form)
-        self.twTabs.setCurrentIndex(0)
+        self.twTabs.setCurrentIndex(1)
         QtCore.QMetaObject.connectSlotsByName(Form)
 
     def retranslateUi(self, Form):
         Form.setWindowTitle(QtGui.QApplication.translate("Form", "Form", None, QtGui.QApplication.UnicodeUTF8))
         self.twTabs.setTabText(self.twTabs.indexOf(self.tabMessages), QtGui.QApplication.translate("Form", "Messages", None, QtGui.QApplication.UnicodeUTF8))
         self.twTabs.setTabText(self.twTabs.indexOf(self.tab_9), QtGui.QApplication.translate("Form", "Table Data", None, QtGui.QApplication.UnicodeUTF8))
-        self.twTabs.setTabText(self.twTabs.indexOf(self.tab_10), QtGui.QApplication.translate("Form", "Info", None, QtGui.QApplication.UnicodeUTF8))
 
 from tabledatawidget import TableDataWidget
 import res_rc

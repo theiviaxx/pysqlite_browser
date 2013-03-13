@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'C:\Users\Dixon\Projects\sqlpy\blob.ui'
+# Form implementation generated from reading ui file 'C:\Users\Dixon\Projects\pysqlite_browser\blob.ui'
 #
-# Created: Mon Feb 18 15:45:30 2013
+# Created: Sun Feb 24 13:57:48 2013
 #      by: PyQt4 UI code generator 4.8.3
 #
 # WARNING! All changes made in this file will be lost!
@@ -17,7 +17,7 @@ except AttributeError:
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
         Dialog.setObjectName(_fromUtf8("Dialog"))
-        Dialog.resize(802, 467)
+        Dialog.resize(506, 335)
         Dialog.setSizeGripEnabled(True)
         self.verticalLayout = QtGui.QVBoxLayout(Dialog)
         self.verticalLayout.setObjectName(_fromUtf8("verticalLayout"))
@@ -46,6 +46,18 @@ class Ui_Dialog(object):
         self.ckSetNull = QtGui.QCheckBox(self.widget)
         self.ckSetNull.setObjectName(_fromUtf8("ckSetNull"))
         self.horizontalLayout.addWidget(self.ckSetNull)
+        self.bLoad = QtGui.QPushButton(self.widget)
+        icon = QtGui.QIcon()
+        icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/icons/folder.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.bLoad.setIcon(icon)
+        self.bLoad.setObjectName(_fromUtf8("bLoad"))
+        self.horizontalLayout.addWidget(self.bLoad)
+        self.bSave = QtGui.QPushButton(self.widget)
+        icon1 = QtGui.QIcon()
+        icon1.addPixmap(QtGui.QPixmap(_fromUtf8(":/icons/disk.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.bSave.setIcon(icon1)
+        self.bSave.setObjectName(_fromUtf8("bSave"))
+        self.horizontalLayout.addWidget(self.bSave)
         self.verticalLayout.addWidget(self.widget)
         self.tContent = QtGui.QPlainTextEdit(Dialog)
         self.tContent.setObjectName(_fromUtf8("tContent"))
@@ -94,9 +106,12 @@ class Ui_Dialog(object):
         self.bText.setText(QtGui.QApplication.translate("Dialog", "Text", None, QtGui.QApplication.UnicodeUTF8))
         self.bImage.setText(QtGui.QApplication.translate("Dialog", "Image", None, QtGui.QApplication.UnicodeUTF8))
         self.ckSetNull.setText(QtGui.QApplication.translate("Dialog", "Set Null", None, QtGui.QApplication.UnicodeUTF8))
+        self.bLoad.setText(QtGui.QApplication.translate("Dialog", "From file", None, QtGui.QApplication.UnicodeUTF8))
+        self.bSave.setText(QtGui.QApplication.translate("Dialog", "Save to file", None, QtGui.QApplication.UnicodeUTF8))
         self.lImage.setText(QtGui.QApplication.translate("Dialog", "TextLabel", None, QtGui.QApplication.UnicodeUTF8))
         self.label.setText(QtGui.QApplication.translate("Dialog", "Size:", None, QtGui.QApplication.UnicodeUTF8))
         self.label_2.setText(QtGui.QApplication.translate("Dialog", "bytes", None, QtGui.QApplication.UnicodeUTF8))
         self.bOk.setText(QtGui.QApplication.translate("Dialog", "OK", None, QtGui.QApplication.UnicodeUTF8))
         self.bCancel.setText(QtGui.QApplication.translate("Dialog", "Cancel", None, QtGui.QApplication.UnicodeUTF8))
 
+import res_rc

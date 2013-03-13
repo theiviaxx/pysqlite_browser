@@ -1,7 +1,10 @@
 import time
 import re
 
-from PyQt4 import QtGui, QtCore, QtSql
+try:
+    from PyQt4 import QtGui, QtCore, QtSql
+except ImportError:
+    from PySide import QtGui, QtCore, QtSql
 from query_main import Ui_Form
 
 from tabledatawidget import TableDataWidget
@@ -128,8 +131,7 @@ class QueryWidget(QtGui.QWidget):
         )
         self._ui.tMessages.insertPlainText(text)
         
-        if errors:
-            self._ui.twTabs.setCurrentWidget(self._ui.tabMessages)
+        self._ui.twTabs.setCurrentWidget(self._ui.tabMessages)
     
     def __clearQueryTabs(self):
         widget = self._ui.twTabs.widget(0)

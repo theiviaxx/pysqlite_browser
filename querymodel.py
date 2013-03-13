@@ -1,7 +1,11 @@
 
 import time
+import re
 
-from PyQt4 import QtGui, QtCore, QtSql
+try:
+    from PyQt4 import QtGui, QtCore, QtSql
+except ImportError:
+    from PySide import QtGui, QtCore, QtSql
 
 from sqlitedatabase import SQLiteQuery
 
@@ -37,15 +41,24 @@ class QueryModel(QtCore.QAbstractTableModel):
         return len(self._headers)
     
     def data(self, index, role=QtCore.Qt.DisplayRole):
-        if role == QtCore.Qt.DisplayRole or role == QtCore.Qt.EditRole or role == USER_ROLE:
-            if self._db.getType(self._table, index.column()) == 'real' and role == QtCore.Qt.DisplayRole:
+        fieldtype = self._db.getType(self._table, index.column())
+        if role == QtCore.Qt.DisplayRole:
+            if fieldtype == 'real':
                 return str(self._data[index.row()][index.column()])
+            elif fieldtype == 'text':
+                value = unicode(self._data[index.row()][index.column()])
+                value = repr(value)[2:-1]
+                return value
+            
             return self._data[index.row()][index.column()]
+        elif role == QtCore.Qt.EditRole:
+            return self._data[index.row()][index.column()]
+        
         return None
     
     def setData(self, index, value, role=QtCore.Qt.EditRole):
         self._data[index.row()][index.column()] = value
-        self._rowid = self._data[index.row()][0]
+        self._rowid = self.rowid(index)
         quoted = self._db.getType(self._table, index.column()) == 'text'
         if quoted:
             value = "'%s'" % value
@@ -80,12 +93,17 @@ class QueryModel(QtCore.QAbstractTableModel):
     
     def removeRows(self, row, count, parent):
         self.beginInsertRows(parent, row, row + count)
-        self._data = data[row:row + count]
+        self._data = self._data[row:row + count]
         self.endInsertRows()
+    
+    def reset(self):
+        self.beginResetModel()
+        self._data = [[]]
+        self.endResetModel()
     
     ## -- new methods
     def rowid(self, index):
-        return self._data[index.row()][0]
+        return index.row() + 1 ## -- 1 based row IDs
     
     def setDatabase(self, db):
         self._db = db

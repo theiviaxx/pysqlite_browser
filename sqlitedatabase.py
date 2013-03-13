@@ -2,10 +2,15 @@
 import json
 import time
 
-from PyQt4 import QtGui, QtCore, QtSql
+try:
+    from PyQt4 import QtGui, QtCore, QtSql
+except ImportError:
+    from PySide import QtGui, QtCore, QtSql
 
 
 class SQLiteDatabase(QtSql.QSqlDatabase):
+    queriesChanged = QtCore.pyqtSignal()
+    
     def __init__(self, *args):
         super(SQLiteDatabase, self).__init__(*args)
         
