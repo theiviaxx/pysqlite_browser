@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'C:\Users\Dixon\Projects\pysqlite_browser\exportdata.ui'
 #
-# Created: Thu Feb 21 21:37:40 2013
+# Created: Tue Jul 23 21:23:13 2013
 #      by: PyQt4 UI code generator 4.8.3
 #
 # WARNING! All changes made in this file will be lost!
@@ -228,7 +228,7 @@ class Ui_Dialog(object):
         QtCore.QMetaObject.connectSlotsByName(Dialog)
 
     def retranslateUi(self, Dialog):
-        Dialog.setWindowTitle(QtGui.QApplication.translate("Dialog", "Dialog", None, QtGui.QApplication.UnicodeUTF8))
+        Dialog.setWindowTitle(QtGui.QApplication.translate("Dialog", "Export Data", None, QtGui.QApplication.UnicodeUTF8))
         self.label_2.setText(QtGui.QApplication.translate("Dialog", "Choose a format in which you want to export your data", None, QtGui.QApplication.UnicodeUTF8))
         self.label_4.setText(QtGui.QApplication.translate("Dialog", "Save to file", None, QtGui.QApplication.UnicodeUTF8))
         self.groupBox.setTitle(QtGui.QApplication.translate("Dialog", "Select Field(s) To Export", None, QtGui.QApplication.UnicodeUTF8))

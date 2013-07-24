@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'C:\Users\Dixon\Projects\pysqlite_browser\blob.ui'
 #
-# Created: Sun Feb 24 13:57:48 2013
+# Created: Tue Jul 23 21:23:15 2013
 #      by: PyQt4 UI code generator 4.8.3
 #
 # WARNING! All changes made in this file will be lost!
@@ -17,7 +17,7 @@ except AttributeError:
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
         Dialog.setObjectName(_fromUtf8("Dialog"))
-        Dialog.resize(506, 335)
+        Dialog.resize(660, 448)
         Dialog.setSizeGripEnabled(True)
         self.verticalLayout = QtGui.QVBoxLayout(Dialog)
         self.verticalLayout.setObjectName(_fromUtf8("verticalLayout"))
@@ -102,7 +102,7 @@ class Ui_Dialog(object):
         QtCore.QMetaObject.connectSlotsByName(Dialog)
 
     def retranslateUi(self, Dialog):
-        Dialog.setWindowTitle(QtGui.QApplication.translate("Dialog", "Dialog", None, QtGui.QApplication.UnicodeUTF8))
+        Dialog.setWindowTitle(QtGui.QApplication.translate("Dialog", "Insert/Update Blob Field", None, QtGui.QApplication.UnicodeUTF8))
         self.bText.setText(QtGui.QApplication.translate("Dialog", "Text", None, QtGui.QApplication.UnicodeUTF8))
         self.bImage.setText(QtGui.QApplication.translate("Dialog", "Image", None, QtGui.QApplication.UnicodeUTF8))
         self.ckSetNull.setText(QtGui.QApplication.translate("Dialog", "Set Null", None, QtGui.QApplication.UnicodeUTF8))

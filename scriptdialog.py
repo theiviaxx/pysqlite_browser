@@ -18,9 +18,12 @@ class ScriptDialog(QtGui.QDialog):
         self._ui.setupUi(self)
         self.setWindowModality(QtCore.Qt.WindowModal)
         
-        self._ui.buttonBox.accepted.connect(self.__acceptHandler)
         self._ui.buttonBox.rejected.connect(self.close)
         self._ui.bBrowse.clicked.connect(self.browseHandler)
+    
+    def accept(self):
+        self.__acceptHandler()
+        return super(ScriptDialog, self).accept()
     
     def browseHandler(self):
         res = QtGui.QFileDialog.getOpenFileName(
@@ -42,7 +45,6 @@ class ScriptDialog(QtGui.QDialog):
         
         for i, query in enumerate(data):
             self._ui.progressBar.setValue(i)
-            query = re.sub('\s', '', query)
             q = SQLiteQuery(self._db)
             q.exec_(query)
             err = q.lastError()
@@ -61,6 +63,7 @@ class ScriptDialog(QtGui.QDialog):
                 return False
         
         self._db.commit()
+        self._ui.progressBar.setValue(len(data))
         
         QtGui.QMessageBox.information(
             self,

@@ -24,8 +24,12 @@ class Window(QtGui.QMainWindow):
         
         self.bindEvents()
     
+    def closeEvent(self, event):
+        self.removeAllDatabases()
+        return super(Window, self).closeEvent(event)
+    
     def bindEvents(self):
-        self._ui.actionOpen.triggered.connect(self.addDatabse)
+        self._ui.actionOpen.triggered.connect(self.addDatabase)
         self._ui.actionExecute_All_Queries.triggered.connect(self.executeQuery)
         self._ui.tbDatabases.tabCloseRequested.connect(self.removeDataBase)
         self._ui.tbDatabases.currentChanged.connect(self.tabChangeHandler)
@@ -52,7 +56,7 @@ class Window(QtGui.QMainWindow):
         else:
             self.setTableActionsEnabled(False)
     
-    def addDatabse(self, dbfile=None):
+    def addDatabase(self, dbfile=None):
         if not dbfile:
             dbfile = QtGui.QFileDialog.getOpenFileName(self, 'Pick a SQLite DB file')
         
@@ -124,10 +128,10 @@ class Window(QtGui.QMainWindow):
         )
         if dbfile:
             if commands.newDatabase(dbfile):
-                self.addDatabse(dbfile)
+                self.addDatabase(dbfile)
     
     def newMemoryDatabase(self):
-        self.addDatabse(':memory:')
+        self.addDatabase(':memory:')
     
     def setTableActionsEnabled(self, enabled=True):
         actions = [
@@ -184,6 +188,8 @@ class Window(QtGui.QMainWindow):
         db = widget.database() if widget else None
         dlg = ScriptDialog(db, self)
         dlg.exec_()
+        
+        self.reloadDatabase()
     
     def aboutHandler(self):
         QtGui.QMessageBox.about(

@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'C:\Users\Dixon\Projects\pysqlite_browser\sqlpy.ui'
 #
-# Created: Sat Feb 23 22:11:10 2013
+# Created: Tue Jul 23 21:18:55 2013
 #      by: PyQt4 UI code generator 4.8.3
 #
 # WARNING! All changes made in this file will be lost!
@@ -31,9 +31,6 @@ class Ui_MainWindow(object):
         self.verticalLayout.setMargin(0)
         self.verticalLayout.setObjectName(_fromUtf8("verticalLayout"))
         self.tbDatabases = QtGui.QTabWidget(self.centralwidget)
-        self.tbDatabases.setStyleSheet(_fromUtf8("QTabWidge1t {\n"
-"background: #293955;\n"
-"}"))
         self.tbDatabases.setDocumentMode(True)
         self.tbDatabases.setTabsClosable(True)
         self.tbDatabases.setObjectName(_fromUtf8("tbDatabases"))
@@ -50,8 +47,6 @@ class Ui_MainWindow(object):
         self.menuTable.setObjectName(_fromUtf8("menuTable"))
         self.menuTools = QtGui.QMenu(self.menubar)
         self.menuTools.setObjectName(_fromUtf8("menuTools"))
-        self.menuHelp = QtGui.QMenu(self.menubar)
-        self.menuHelp.setObjectName(_fromUtf8("menuHelp"))
         MainWindow.setMenuBar(self.menubar)
         self.statusbar = QtGui.QStatusBar(MainWindow)
         self.statusbar.setObjectName(_fromUtf8("statusbar"))
@@ -63,7 +58,7 @@ class Ui_MainWindow(object):
         MainWindow.addToolBar(QtCore.Qt.TopToolBarArea, self.toolBar)
         self.actionOpen = QtGui.QAction(MainWindow)
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/icons/database_edit.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/icons/folder.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.actionOpen.setIcon(icon)
         self.actionOpen.setObjectName(_fromUtf8("actionOpen"))
         self.actionNew = QtGui.QAction(MainWindow)
@@ -187,12 +182,10 @@ class Ui_MainWindow(object):
         self.menuTable.addAction(self.actionDrop_Table)
         self.menuTools.addAction(self.actionExecute_Script)
         self.menuTools.addAction(self.actionHistory)
-        self.menuHelp.addAction(self.actionAbout)
         self.menubar.addAction(self.menuFile.menuAction())
         self.menubar.addAction(self.menuDatabase.menuAction())
         self.menubar.addAction(self.menuTable.menuAction())
         self.menubar.addAction(self.menuTools.menuAction())
-        self.menubar.addAction(self.menuHelp.menuAction())
         self.toolBar.addAction(self.actionNew)
         self.toolBar.addAction(self.actionOpen)
         self.toolBar.addAction(self.actionRefresh)
@@ -209,7 +202,6 @@ class Ui_MainWindow(object):
         self.menuDatabase.setTitle(QtGui.QApplication.translate("MainWindow", "Database", None, QtGui.QApplication.UnicodeUTF8))
         self.menuTable.setTitle(QtGui.QApplication.translate("MainWindow", "Table", None, QtGui.QApplication.UnicodeUTF8))
         self.menuTools.setTitle(QtGui.QApplication.translate("MainWindow", "Tools", None, QtGui.QApplication.UnicodeUTF8))
-        self.menuHelp.setTitle(QtGui.QApplication.translate("MainWindow", "Help", None, QtGui.QApplication.UnicodeUTF8))
         self.toolBar.setWindowTitle(QtGui.QApplication.translate("MainWindow", "toolBar", None, QtGui.QApplication.UnicodeUTF8))
         self.actionOpen.setText(QtGui.QApplication.translate("MainWindow", "Open Database", None, QtGui.QApplication.UnicodeUTF8))
         self.actionNew.setText(QtGui.QApplication.translate("MainWindow", "New Database", None, QtGui.QApplication.UnicodeUTF8))

@@ -162,12 +162,12 @@ def tableCreateScript(db, table):
             create += ' NOT NULL'
         
         if not isinstance(q.value(4), QtCore.QPyNullVariant):
-            create += ' %s' % q.value(4)
+            create += ' DEFAULT %s' % q.value(4)
         create += ','
         hasmore = q.next()
     
     create = create[:-1]
-    create += '\n)'
+    create += '\n);'
     
     return create
     

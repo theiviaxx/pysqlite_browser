@@ -133,7 +133,7 @@ class SQLSerializer(Serializer):
                     else:
                         row[i] = str(v)
                 
-                query = "INSERT INTO {table} ({fields}) VALUES ({values})".format(
+                query = "INSERT INTO {table} ({fields}) VALUES ({values});".format(
                     table=self._table,
                     fields=','.join(fields),
                     values=','.join(row)
