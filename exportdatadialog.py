@@ -1,18 +1,21 @@
 try:
     from PyQt4 import QtGui, QtCore, QtSql
+    from PyQt4.uic import loadUiType
 except ImportError:
     from PySide import QtGui, QtCore, QtSql
-from exportdata_main import Ui_Dialog
+    from loadui import loadUiType
 
 import serializer
 import commands
 
+form_class, base_class = loadUiType('./exportdata.ui')
 
-class ExportDataDialog(QtGui.QDialog):
+
+class ExportDataDialog(base_class):
     def __init__(self, db, table, parent=None):
         super(ExportDataDialog, self).__init__(parent)
         
-        self._ui = Ui_Dialog()
+        self._ui = form_class()
         self._ui.setupUi(self)
         
         self._db = db

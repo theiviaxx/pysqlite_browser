@@ -5,8 +5,10 @@ try:
     sip.setapi('QString', 2)
     sip.setapi('QVariant', 2)
     from PyQt4 import QtGui, QtCore, QtSql
+    from PyQt4.uic import loadUiType
 except ImportError:
     from PySide import QtGui, QtCore, QtSql
+    from loadui import loadUiType
 
 from sqlpy_main import Ui_MainWindow
 from databasewidget import DatabaseWidet
@@ -14,12 +16,14 @@ from scriptdialog import ScriptDialog
 
 import commands
 
+form_class, base_class = loadUiType('./sqlpy.ui')
 
-class Window(QtGui.QMainWindow):
+
+class Window(base_class):
     def __init__(self, parent=None):
         super(Window, self).__init__(parent)
         
-        self._ui = Ui_MainWindow()
+        self._ui = form_class()
         self._ui.setupUi(self)
         
         self.bindEvents()
@@ -59,6 +63,8 @@ class Window(QtGui.QMainWindow):
     def addDatabase(self, dbfile=None):
         if not dbfile:
             dbfile = QtGui.QFileDialog.getOpenFileName(self, 'Pick a SQLite DB file')
+            if isinstance(dbfile, (list, tuple)):
+                dbfile = dbfile[0]
         
         if dbfile:
             if self.hasDatabase(dbfile) == -1:
@@ -126,6 +132,9 @@ class Window(QtGui.QMainWindow):
             self,
             'Choose database file',
         )
+        if isinstance(dbfile, (list, tuple)):
+            dbfile = dbfile[0]
+        
         if dbfile:
             if commands.newDatabase(dbfile):
                 self.addDatabase(dbfile)

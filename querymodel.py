@@ -4,23 +4,22 @@ import re
 
 try:
     from PyQt4 import QtGui, QtCore, QtSql
+    Signal = QtCore.pyqtSignal
+    Null = QtCore.QPyNullVariant
 except ImportError:
     from PySide import QtGui, QtCore, QtSql
+    Signal = QtCore.Signal
+    Null = None
 
 from sqlitedatabase import SQLiteQuery
-
-USER_ROLE = QtCore.Qt.UserRole + 1
-
-
-class ModelSignal(QtCore.QObject):
-    dataCommitted = QtCore.pyqtSignal()
+import commands
 
 
 class QueryModel(QtCore.QAbstractTableModel):
+    dataCommitted = Signal()
+    
     def __init__(self, parent=None):
         super(QueryModel, self).__init__(parent)
-        
-        signals = ModelSignal(self)
         
         self._query = ''
         self._db = None
@@ -32,7 +31,6 @@ class QueryModel(QtCore.QAbstractTableModel):
         self._queue = []
         self._rowid = 0
         self._readonly = False
-        self.dataCommitted = signals.dataCommitted
     
     def rowCount(self, parent=QtCore.QModelIndex()):
         return len(self._data)
@@ -46,9 +44,14 @@ class QueryModel(QtCore.QAbstractTableModel):
             if fieldtype == 'real':
                 return str(self._data[index.row()][index.column()])
             elif fieldtype == 'text':
-                value = unicode(self._data[index.row()][index.column()])
+                value = self._data[index.row()][index.column()]
+                if value is None:
+                    return '(NULL)'
+                
                 value = repr(value)[2:-1]
                 return value
+            elif fieldtype == 'blob':
+                return '(Binary/Image)'
             
             return self._data[index.row()][index.column()]
         elif role == QtCore.Qt.EditRole:
@@ -59,7 +62,8 @@ class QueryModel(QtCore.QAbstractTableModel):
     def setData(self, index, value, role=QtCore.Qt.EditRole):
         self._data[index.row()][index.column()] = value
         self._rowid = self.rowid(index)
-        quoted = self._db.getType(self._table, index.column()) == 'text'
+        quoted = self._db.getType(self._table, index.column()) == 'text' or \
+               not commands.istext(value)
         if quoted:
             value = "'%s'" % value
         
@@ -143,6 +147,12 @@ class QueryModel(QtCore.QAbstractTableModel):
             val = result.value(i)
             fields = []
             while i < count:
+                try:
+                    if isinstance(val, QtCore.QPyNullVariant):
+                        val = None
+                except AttributeError:
+                    ## -- PySide should handle this correctly
+                    pass
                 fields.append(val)
                 i += 1
                 val = result.value(i)
@@ -156,7 +166,7 @@ class QueryModel(QtCore.QAbstractTableModel):
         if self._updates:
             q = SQLiteQuery()
             query = "UPDATE {table} SET {sets} WHERE rowid = {rowid}"
-            sets = ','.join(['%s = %s' % (x, y) for x, y in self._updates])
+            sets = ','.join(['%s = %s' % (str(x), y) for x, y in self._updates])
             query = query.format(table=self._table, sets=sets, rowid=self._rowid)
             q.exec_(query)
             err = q.lastError()

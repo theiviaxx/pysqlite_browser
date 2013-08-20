@@ -2,19 +2,23 @@ import re
 
 try:
     from PyQt4 import QtGui, QtCore, QtSql
+    from PyQt4.uic import loadUiType
 except ImportError:
     from PySide import QtGui, QtCore, QtSql
-from sqlscript_main import Ui_Dialog
+    from loadui import loadUiType
 
 from sqlitedatabase import SQLiteQuery
 
-class ScriptDialog(QtGui.QDialog):
+form_class, base_class = loadUiType('./sqlscript.ui')
+
+
+class ScriptDialog(base_class):
     def __init__(self, db, parent=None):
         super(ScriptDialog, self).__init__(parent)
         
         self._db = db
         
-        self._ui = Ui_Dialog()
+        self._ui = form_class()
         self._ui.setupUi(self)
         self.setWindowModality(QtCore.Qt.WindowModal)
         

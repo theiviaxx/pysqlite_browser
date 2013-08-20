@@ -2,19 +2,23 @@ from collections import OrderedDict
 
 try:
     from PyQt4 import QtGui, QtCore, QtSql
+    from PyQt4.uic import loadUiType
 except ImportError:
     from PySide import QtGui, QtCore, QtSql
-from database_main import Ui_Form
-from constants import FIELD_TYPES
+    from loadui import loadUiType
 
+from constants import FIELD_TYPES
 from querywidget import QueryWidget
 import commands
 
 
-HISTORY = 'History'
-QUERY = 'Query'
+HISTORY = u'History'
+QUERY = u'Query'
 
-class DatabaseWidet(QtGui.QWidget):
+form_class, base_class = loadUiType('./database.ui')
+
+
+class DatabaseWidet(base_class):
     def __init__(self, database, menu, parent=None):
         super(DatabaseWidet, self).__init__(parent)
         
@@ -25,7 +29,7 @@ class DatabaseWidet(QtGui.QWidget):
         self.histicon = QtGui.QIcon(QtGui.QPixmap(":/icons/calendar_view_day.png"))
         self._menu = menu
         
-        self._ui = Ui_Form()
+        self._ui = form_class()
         self._ui.setupUi(self)
         self._ui.splitter.setStretchFactor(1, 1)
         

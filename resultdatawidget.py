@@ -2,11 +2,12 @@
 
 try:
     from PyQt4 import QtGui, QtCore, QtSql
+    from PyQt4.uic import loadUiType
 except ImportError:
     from PySide import QtGui, QtCore, QtSql
-from resultdata_main import Ui_Form
-from tabledatawidget import TableDataWidget
+    from loadui import loadUiType
 
+from tabledatawidget import TableDataWidget
 
 READ_STYLE = """
 QTableView { gridline-color: #b4b4b4; }

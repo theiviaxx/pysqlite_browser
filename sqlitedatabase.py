@@ -4,12 +4,14 @@ import time
 
 try:
     from PyQt4 import QtGui, QtCore, QtSql
+    Signal = QtCore.pyqtSignal
 except ImportError:
     from PySide import QtGui, QtCore, QtSql
+    Signal = QtCore.Signal
 
 
 class SQLiteDatabase(QtSql.QSqlDatabase):
-    queriesChanged = QtCore.pyqtSignal()
+    queriesChanged = Signal()
     
     def __init__(self, *args):
         super(SQLiteDatabase, self).__init__(*args)
@@ -26,7 +28,7 @@ class SQLiteDatabase(QtSql.QSqlDatabase):
         return {}
     
     def appendQuery(self, query):
-        qstring = '<span style="font-family: Courier New;"><span style="color: #008080;">/*[{time}][{duration} ms]*/</span> {query}</span>'
+        qstring = u'<span style="font-family: Courier New;"><span style="color: #008080;">/*[{time}][{duration} ms]*/</span> {query}</span>'
         self._history.append(qstring.format(
             time=time.strftime("%I:%M:%S %p", time.gmtime()),
             duration=int(query.time() * 1000),

@@ -1,17 +1,23 @@
 import codecs
+import base64
 
 try:
     from PyQt4 import QtGui, QtCore, QtSql
+    from PyQt4.uic import loadUiType
 except ImportError:
     from PySide import QtGui, QtCore, QtSql
-from blob_main import Ui_Dialog
+    from loadui import loadUiType
+
+import commands
+
+form_class, base_class = loadUiType('./blob.ui')
 
 
-class BlobDialog(QtGui.QDialog):
+class BlobDialog(base_class):
     def __init__(self, parent=None):
         super(BlobDialog, self).__init__(parent)
         
-        self._ui = Ui_Dialog()
+        self._ui = form_class()
         self._ui.setupUi(self)
         self.setWindowModality(QtCore.Qt.WindowModal)
         self._ui.tContent.textChanged.connect(self.__contentChanged)
@@ -32,13 +38,21 @@ class BlobDialog(QtGui.QDialog):
             if self._ui.ckSetNull.isChecked():
                 return None
             
-            return self._ui.tContent.document().toPlainText()
+            if commands.istext(self._content):
+                return self._ui.tContent.document().toPlainText()
+            else:
+                return self._content
         else:
             return self._initialValue
     
     def setContent(self, content):
-        content = "".join(i for i in content if ord(i)<128)
         self._content = content
+        if content is None:
+            self._ui.ckSetNull.setChecked(True)
+            
+            return
+        
+        content = u"".join(i for i in content if ord(i)<128)
         content = content.decode('string-escape')
         self._ui.tContent.setPlainText(content)
         self._initialValue = content
@@ -46,8 +60,9 @@ class BlobDialog(QtGui.QDialog):
     def __imageHandler(self):
         self._ui.tContent.setVisible(False)
         self._ui.wImage.setVisible(True)
+        
         data = QtCore.QByteArray(self._content)
-        pixmap = QtGui.QPixmap(self)
+        pixmap = QtGui.QPixmap()
         pixmap.loadFromData(data)
         self._ui.lImage.setPixmap(pixmap)
 
@@ -56,7 +71,11 @@ class BlobDialog(QtGui.QDialog):
         self._ui.wImage.setVisible(False)
     
     def __contentChanged(self):
-        self._ui.lSize.setText(str(len(self._content)))
+        if self._content is None:
+            length = 0
+        else:
+            length = len(self._content)
+        self._ui.lSize.setText(str(length))
     
     def __acceptHandler(self):
         self._isaccepted = True
@@ -64,6 +83,8 @@ class BlobDialog(QtGui.QDialog):
     
     def __loadHandler(self):
         file_ = QtGui.QFileDialog.getOpenFileName(self)
+        if isinstance(file_, (list, tuple)):
+            file_ = file_[0]
         
         if file_:
             fh = open(file_, 'rb')

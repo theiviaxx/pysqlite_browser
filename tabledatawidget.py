@@ -3,9 +3,11 @@ import json
 
 try:
     from PyQt4 import QtGui, QtCore, QtSql
+    from PyQt4.uic import loadUiType
 except ImportError:
     from PySide import QtGui, QtCore, QtSql
-from tabledata_main import Ui_Form
+    from loadui import loadUiType
+
 from querymodel import QueryModel, QuerySortModel
 from blobdialog import BlobDialog
 from exportdatadialog import ExportDataDialog
@@ -13,40 +15,44 @@ from sqlitedatabase import SQLiteQuery
 import serializer
 import commands
 
-QUERY = "SELECT * FROM {table}{limit}"
-LIMIT = " LIMIT {limit}"
-DELETE = "DELETE FROM {table} WHERE id IN [{ids}]"
-STYLE = """
-QTableView { gridline-color: #b4b4b4; }
-"""
+QUERY = u"SELECT * FROM {table}{limit}"
+LIMIT = u" LIMIT {limit}"
+DELETE = u"DELETE FROM {table} WHERE id IN [{ids}]"
+
+form_class, base_class = loadUiType('./tabledata.ui')
 
 
 class TableDelegate(QtGui.QItemDelegate):
     def createEditor(self, parent, option, index):
-        if isinstance(index.data(QtCore.Qt.EditRole), (str, unicode)):
+        data = index.data(QtCore.Qt.EditRole)
+        if isinstance(data, (str, unicode)) or data is None:
             widget = BlobDialog(parent)
             return widget
         
         return super(TableDelegate, self).createEditor(parent, option, index)
     
     def setEditorData(self, editor, index):
-        if isinstance(index.data(QtCore.Qt.EditRole), (str, unicode)):
-            editor.setContent(index.data(QtCore.Qt.EditRole))
-            #editor.adjustSize()
-            editor.move(editor.parentWidget().rect().center() - editor.rect().center())
+        data = index.data(QtCore.Qt.EditRole)
+        if isinstance(data, (str, unicode)) or data is None:
+            if isinstance(editor, BlobDialog):
+                editor.setContent(data)
+            else:
+                editor.setValue(data)
+            
+            editor.move(editor.parent().rect().center() - editor.rect().center())
         else:
             super(TableDelegate, self).setEditorData(editor, index)
     
     def setModelData(self, editor, model, index):
         if isinstance(index.data(QtCore.Qt.EditRole), (str, unicode)):
             value = editor.content()
-            model.setData(index, value)
+            model.sourceModel().setData(index, value)
         else:
             super(TableDelegate, self).setModelData(editor, model, index)
     
 
 
-class TableDataWidget(QtGui.QWidget):
+class TableDataWidget(base_class):
     def __init__(self, parent=None):
         super(TableDataWidget, self).__init__(parent)
         
@@ -61,9 +67,8 @@ class TableDataWidget(QtGui.QWidget):
         self._rowid = 0
         self._query = None
         
-        self._ui = Ui_Form()
+        self._ui = form_class()
         self._ui.setupUi(self)
-        self._ui.twGrid.setStyleSheet(STYLE)
         self._ui.twGrid.verticalHeader().setDefaultSectionSize(20)
         self._ui.iLimit.setKeyboardTracking(False)
         self._ui.twGrid.setModel(self._proxy)
@@ -204,7 +209,7 @@ class TableDataWidget(QtGui.QWidget):
                 else:
                     values[i] = str(v)
             
-            query = "INSERT INTO {table} ({fields}) VALUES ({values})".format(
+            query = u"INSERT INTO {table} ({fields}) VALUES ({values})".format(
                 table=self._table,
                 fields=','.join(fields),
                 values=','.join(values)
